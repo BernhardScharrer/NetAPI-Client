@@ -1,10 +1,12 @@
-package networking;
+package networking.channel;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-abstract class ObjChannel extends Channel implements Listener {
+import networking.Connection;
+
+abstract class ObjChannel extends Channel {
 
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
@@ -15,12 +17,25 @@ abstract class ObjChannel extends Channel implements Listener {
 
 	@Override
 	protected void setup() {
+		
+		Object obj = null;
+		
 		try {
 			
 			in = new ObjectInputStream(socket.getInputStream());
 			out = new ObjectOutputStream(socket.getOutputStream());
 			
+			while ((obj = in.readObject()) != null) {
+				recieve(obj);
+			}
+			
+			close();
+			
 		} catch (IOException e) {
+			super.con.getConsole().error("Could not setup IO!");
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			super.con.getConsole().error("Incoming object is strange... (" + obj.toString() + ")");
 			e.printStackTrace();
 		}
 	}
@@ -35,6 +50,8 @@ abstract class ObjChannel extends Channel implements Listener {
 			e.printStackTrace();
 		}
 	}
+	
+	abstract void recieve(Object obj);
 	
 	void send(Object object) {
 		try {

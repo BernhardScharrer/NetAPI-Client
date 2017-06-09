@@ -3,6 +3,8 @@ package networking;
 import java.util.ArrayList;
 import java.util.List;
 
+import networking.channel.Channel;
+
 public class Connection {
 	
 	private String ip;

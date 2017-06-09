@@ -1,7 +1,9 @@
-package networking;
+package networking.channel;
 
 import java.io.IOException;
 import java.net.Socket;
+
+import networking.Connection;
 
 public abstract class Channel {
 	
@@ -10,7 +12,7 @@ public abstract class Channel {
 	protected Connection con;
 	protected int timeout;
 	
-	public Channel(String name, Connection con, int timeout) {
+	Channel(String name, Connection con, int timeout) {
 		
 		this.name = name;
 		this.con = con;
@@ -21,7 +23,9 @@ public abstract class Channel {
 			socket.setSoTimeout(timeout);
 			while (!socket.isBound());
 		} catch (IOException e) {
+			con.getConsole().error("Could establish connection to: "+con.getIP()+":"+con.getPort());
 			e.printStackTrace();
+			return;
 		}
 		
 		setup();

@@ -1,4 +1,7 @@
-package networking;
+package networking.channel;
+
+import networking.Connection;
+import networking.Packet;
 
 public abstract class PacketChannel extends ObjChannel {
 
