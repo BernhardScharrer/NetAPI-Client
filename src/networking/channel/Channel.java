@@ -12,6 +12,11 @@ public abstract class Channel {
 	protected Connection con;
 	protected int timeout;
 	
+	/**
+	 *
+	 * represents an abstract model of a channel
+	 * 
+	 */
 	Channel(String name, Connection con, int timeout) {
 		
 		this.name = name;
@@ -23,7 +28,7 @@ public abstract class Channel {
 			socket.setSoTimeout(timeout);
 			while (!socket.isBound());
 		} catch (IOException e) {
-			con.getConsole().error("Could establish connection to: "+con.getIP()+":"+con.getPort());
+			con.getConsole().error("Could not create connection to: "+con.getIP()+":"+con.getPort());
 			e.printStackTrace();
 			return;
 		}
@@ -31,12 +36,13 @@ public abstract class Channel {
 		setup();
 	}
 
-	protected abstract void setup();
-	
-	public abstract void close();
-
 	public String getName() {
 		return name;
 	}
+	
+	protected abstract void setup();
+	protected abstract ChannelType getType();
+	
+	public abstract void close();
 	
 }

@@ -1,14 +1,14 @@
 package main;
 
 import networking.Connection;
-import networking.ConsoleHandler;
+import networking.Console;
 import networking.channel.StringChannel;
 
 public class Test {
 	
 	public static void main(String[] args) {
 		
-		Connection con = new Connection("localhost", 7777, new ConsoleHandler() {
+		Connection con = new Connection("localhost", 7777, new Console() {
 			
 			@Override
 			public void warn(String msg) {

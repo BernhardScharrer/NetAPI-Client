@@ -1,6 +1,6 @@
 package networking;
 
-public interface ConsoleHandler {
+public interface Console {
 	
 	public void debug(String msg);
 	public void info(String msg);

@@ -13,4 +13,16 @@ public abstract class PacketChannel extends ObjChannel {
 		super.send(packet);
 	}
 	
+	@Override
+	void recieve(Object obj) {
+		if (obj instanceof Packet) incoming((Packet) obj);
+	}
+	
+	protected abstract void incoming(Packet packet);
+	
+	@Override
+	protected ChannelType getType() {
+		return ChannelType.PACKET;
+	}
+	
 }

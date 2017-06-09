@@ -17,6 +17,11 @@ public abstract class StringChannel extends ObjChannel {
 		if (obj instanceof String) incoming((String) obj);
 	}
 	
+	@Override
+	protected ChannelType getType() {
+		return ChannelType.STRING;
+	}
+	
 	protected abstract void incoming(String string);
 	
 }
