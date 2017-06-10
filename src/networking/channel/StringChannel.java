@@ -4,8 +4,8 @@ import networking.Connection;
 
 public abstract class StringChannel extends ObjChannel {
 
-	public StringChannel(String name, Connection con, int timeout) {
-		super(name, con, timeout);
+	public StringChannel(String name, Connection con) {
+		super(name, con);
 	}
 
 	public void send(String string) {
@@ -18,7 +18,7 @@ public abstract class StringChannel extends ObjChannel {
 	}
 	
 	@Override
-	protected ChannelType getType() {
+	public ChannelType getType() {
 		return ChannelType.STRING;
 	}
 	

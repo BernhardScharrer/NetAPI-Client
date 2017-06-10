@@ -10,9 +10,11 @@ abstract class ObjChannel extends Channel {
 
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
+	private boolean ready;
 	
-	public ObjChannel(String name, Connection con, int timeout) {
-		super(name, con, timeout);
+	public ObjChannel(String name, Connection con) {
+		super(name, con);
+		start();
 	}
 
 	@Override
@@ -22,8 +24,11 @@ abstract class ObjChannel extends Channel {
 		
 		try {
 			
-			in = new ObjectInputStream(socket.getInputStream());
+			con.getConsole().debug("Trying to setup IO...");
 			out = new ObjectOutputStream(socket.getOutputStream());
+			in = new ObjectInputStream(socket.getInputStream());
+			con.getConsole().debug("Finished with IO-setup!");
+			ready = true;
 			
 			while ((obj = in.readObject()) != null) {
 				recieve(obj);
@@ -32,8 +37,7 @@ abstract class ObjChannel extends Channel {
 			close();
 			
 		} catch (IOException e) {
-			super.con.getConsole().error("Could not setup IO!");
-			e.printStackTrace();
+			close();
 		} catch (ClassNotFoundException e) {
 			super.con.getConsole().error("Incoming object is strange... (" + obj.toString() + ")");
 			e.printStackTrace();
@@ -43,8 +47,8 @@ abstract class ObjChannel extends Channel {
 	@Override
 	public void close() {
 		try {
-			in.close();
-			out.close();
+			if (in!=null) in.close();
+			if (out!=null) out.close();
 			socket.close();
 		} catch (IOException e) {
 			con.getConsole().error("Could not close channel! ("+name+")");
@@ -55,6 +59,7 @@ abstract class ObjChannel extends Channel {
 	abstract void recieve(Object obj);
 	
 	void send(Object object) {
+		while(!ready) try { Thread.sleep(500); } catch (InterruptedException e) { e.printStackTrace(); };
 		try {
 			out.writeObject(object);
 			out.flush();

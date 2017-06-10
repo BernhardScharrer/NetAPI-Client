@@ -2,7 +2,6 @@ package main;
 
 import networking.Connection;
 import networking.DefaultConsole;
-import networking.channel.StringChannel;
 
 public class TestClient {
 	
@@ -10,20 +9,9 @@ public class TestClient {
 		
 		Connection con = new Connection("localhost", 7777, new DefaultConsole());
 		
-		con.addChannel(new MyChannel(con));
+		System.out.println("Runs in extra thread...");
 		
-	}
-	
-	private static class MyChannel extends StringChannel {
-
-		public MyChannel(Connection con) {
-			super("Test", con, 1000);
-		}
-
-		@Override
-		protected void incoming(String string) {
-			System.out.println(string);
-		}
+//		con.addChannel(new MyChannel(con));
 		
 	}
 	

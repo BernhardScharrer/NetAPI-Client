@@ -24,6 +24,9 @@ public class Connection {
 	 * 
 	 */
 	public Connection(String ip, int port, Console console) {
+		
+		console.info("Trying to build connection to: "+ip+":"+port);
+		
 		this.ip = ip;
 		this.port = port;
 		this.console = console;
@@ -46,6 +49,7 @@ public class Connection {
 	}
 	
 	public void addChannel(Channel channel) {
+		main_channel.send("channel;"+channel.getType());
 		this.channels.add(channel);
 	}
 	
@@ -58,13 +62,13 @@ public class Connection {
 		
 		main_channel.send("disconnect");
 		
-		for (Channel channel : channels) channel.close();
+		for (Channel channel : channels) channel.stop();
 		main_channel.close();
 	}
 	
 	public void incoming(String command) {
 		
-		//String[] args = command.split(";");
+		String[] args = command.split(";");
 		
 		switch (command) {
 		case "disconnect":

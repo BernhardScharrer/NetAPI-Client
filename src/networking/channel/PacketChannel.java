@@ -5,8 +5,8 @@ import networking.Packet;
 
 public abstract class PacketChannel extends ObjChannel {
 
-	public PacketChannel(String name, Connection con, int timeout) {
-		super(name, con, timeout);
+	public PacketChannel(String name, Connection con) {
+		super(name, con);
 	}
 	
 	public void send(Packet packet) {
@@ -21,7 +21,7 @@ public abstract class PacketChannel extends ObjChannel {
 	protected abstract void incoming(Packet packet);
 	
 	@Override
-	protected ChannelType getType() {
+	public ChannelType getType() {
 		return ChannelType.PACKET;
 	}
 	

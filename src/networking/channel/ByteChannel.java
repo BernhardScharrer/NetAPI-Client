@@ -12,16 +12,17 @@ public abstract class ByteChannel extends Channel {
 	private OutputStream out;
 	private byte[] buffer;
 	
-	public ByteChannel(String name, Connection con, int timeout, int size) {
-		super(name, con, timeout);
-		this.setup();
+	public ByteChannel(String name, Connection con, int size) {
+		super(name, con);
+		buffer = new byte[size];
+		start();
 	}
 
 	@Override
 	protected void setup() {
 		try {
-			in = socket.getInputStream();
 			out = socket.getOutputStream();
+			in = socket.getInputStream();
 			
 			while (in.read(buffer) != -1) {
 				incoming(buffer);
@@ -37,7 +38,7 @@ public abstract class ByteChannel extends Channel {
 	protected abstract void incoming(byte[] buffer);
 
 	@Override
-	protected ChannelType getType() {
+	public ChannelType getType() {
 		return ChannelType.BYTE;
 	}
 

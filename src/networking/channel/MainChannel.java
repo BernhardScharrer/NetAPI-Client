@@ -5,7 +5,7 @@ import networking.Connection;
 public class MainChannel extends StringChannel {
 	
 	public MainChannel(Connection con) {
-		super("MAIN", con, 3000);
+		super("MAIN", con);
 	}
 
 	@Override
