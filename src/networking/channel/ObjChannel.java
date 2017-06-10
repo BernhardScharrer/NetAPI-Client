@@ -47,6 +47,7 @@ abstract class ObjChannel extends Channel {
 			out.close();
 			socket.close();
 		} catch (IOException e) {
+			con.getConsole().error("Could not close channel! ("+name+")");
 			e.printStackTrace();
 		}
 	}
@@ -58,6 +59,7 @@ abstract class ObjChannel extends Channel {
 			out.writeObject(object);
 			out.flush();
 		} catch (IOException e) {
+			con.getConsole().error("Error while sending obj! ("+object.toString()+")");
 			e.printStackTrace();
 		}
 	}

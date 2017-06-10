@@ -10,14 +10,7 @@ public class MainChannel extends StringChannel {
 
 	@Override
 	protected void incoming(String command) {
-		
-		//String[] args = command.split(";");
-		
-		switch (command) {
-		case "disconnect":
-			con.close();
-			break;
-		}
+		con.incoming(command);
 	}
 
 }

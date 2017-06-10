@@ -33,7 +33,6 @@ public abstract class Channel {
 			return;
 		}
 		
-		setup();
 	}
 
 	public String getName() {

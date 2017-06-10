@@ -1,35 +1,14 @@
 package main;
 
 import networking.Connection;
-import networking.Console;
+import networking.DefaultConsole;
 import networking.channel.StringChannel;
 
-public class Test {
+public class TestClient {
 	
 	public static void main(String[] args) {
 		
-		Connection con = new Connection("localhost", 7777, new Console() {
-			
-			@Override
-			public void warn(String msg) {
-				
-			}
-			
-			@Override
-			public void info(String msg) {
-				
-			}
-			
-			@Override
-			public void error(String msg) {
-				System.out.println(msg);
-			}
-			
-			@Override
-			public void debug(String msg) {
-				
-			}
-		});
+		Connection con = new Connection("localhost", 7777, new DefaultConsole());
 		
 		con.addChannel(new MyChannel(con));
 		

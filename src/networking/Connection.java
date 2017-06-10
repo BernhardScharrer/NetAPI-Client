@@ -62,4 +62,16 @@ public class Connection {
 		main_channel.close();
 	}
 	
+	public void incoming(String command) {
+		
+		//String[] args = command.split(";");
+		
+		switch (command) {
+		case "disconnect":
+			close();
+			break;
+		}
+		
+	}
+	
 }
