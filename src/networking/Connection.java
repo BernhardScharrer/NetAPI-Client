@@ -78,6 +78,10 @@ public class Connection {
 		main_channel.close();
 	}
 	
+	public void send(String msg) {
+		main_channel.send(msg);
+	}
+	
 	public void incoming(String command) {
 		
 //		String[] args = command.split(";");
