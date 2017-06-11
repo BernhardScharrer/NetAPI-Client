@@ -15,7 +15,6 @@ public abstract class ByteChannel extends Channel {
 	public ByteChannel(String name, Connection con, int size) {
 		super(name, con);
 		buffer = new byte[size];
-		start();
 	}
 
 	@Override

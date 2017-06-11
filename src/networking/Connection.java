@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import networking.channel.Channel;
+import networking.channel.ChannelType;
 import networking.channel.MainChannel;
 
 public class Connection {
@@ -33,6 +34,7 @@ public class Connection {
 		this.channels = new ArrayList<>();
 		
 		main_channel = new MainChannel(this);
+		main_channel.start();
 		
 	}
 
@@ -48,9 +50,19 @@ public class Connection {
 		return console;
 	}
 	
+	public void prepareChannel(String name, ChannelType type) {
+		if (name.equals("MAIN")) return;
+		main_channel.send("channel;"+type.toString().toUpperCase()+";"+name);
+		try {
+			Thread.sleep(300);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void addChannel(Channel channel) {
-		main_channel.send("channel;"+channel.getType());
 		this.channels.add(channel);
+		channel.start();
 	}
 	
 	public Channel getChannel(String name) {
@@ -68,7 +80,7 @@ public class Connection {
 	
 	public void incoming(String command) {
 		
-		String[] args = command.split(";");
+//		String[] args = command.split(";");
 		
 		switch (command) {
 		case "disconnect":

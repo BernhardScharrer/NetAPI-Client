@@ -22,6 +22,7 @@ public abstract class Channel {
 		
 		this.name = name;
 		this.con = con;
+		this.con.prepareChannel(name, getType());
 		
 		try {
 			socket = new Socket(con.getIP(), con.getPort());

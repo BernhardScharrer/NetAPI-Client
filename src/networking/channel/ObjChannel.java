@@ -14,7 +14,6 @@ abstract class ObjChannel extends Channel {
 	
 	public ObjChannel(String name, Connection con) {
 		super(name, con);
-		start();
 	}
 
 	@Override
