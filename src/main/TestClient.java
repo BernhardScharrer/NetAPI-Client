@@ -1,5 +1,7 @@
 package main;
 
+import java.util.Scanner;
+
 import networking.Connection;
 import networking.DefaultConsole;
 import networking.Packet;
@@ -11,15 +13,21 @@ public class TestClient {
 		
 		Connection con = new Connection("localhost", 7777, new DefaultConsole());
 		
-		System.out.println("Runs in extra thread...");
+//		con.addChannel(new PacketChannel("PACKET", con) {
+//			protected void incoming(Packet packet) {
+//				
+//				
+//				
+//			}
+//		});
 		
-		con.addChannel(new PacketChannel("PACKET", con) {
-			protected void incoming(Packet packet) {
-				
-				
-				
-			}
-		});
+		Scanner scanner = new Scanner(System.in);
+		
+		String line = "";
+		
+		while ((line = scanner.nextLine())!=null) {
+			con.send(line);
+		}
 		
 	}
 	

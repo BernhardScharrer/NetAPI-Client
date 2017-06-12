@@ -3,6 +3,7 @@ package networking.channel;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.SocketException;
 
 import networking.Connection;
 
@@ -62,6 +63,8 @@ abstract class ObjChannel extends Channel {
 		try {
 			out.writeObject(object);
 			out.flush();
+		} catch (SocketException e) {
+			con.getConsole().error("Connection already closed!");
 		} catch (IOException e) {
 			con.getConsole().error("Error while sending obj! ("+object.toString()+")");
 			e.printStackTrace();

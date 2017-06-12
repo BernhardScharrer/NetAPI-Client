@@ -5,7 +5,6 @@ public enum ChannelType {
 	STRING,
 	PACKET,
 	BYTE,
-	INT,
-	FLOAT;
+	NONE;
 	
 }
