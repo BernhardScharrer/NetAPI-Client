@@ -59,6 +59,7 @@ abstract class ObjChannel extends Channel {
 	abstract void recieve(Object obj);
 	
 	void send(Object object) {
+		System.out.println(object.toString());
 		while(!ready) try { Thread.sleep(500); } catch (InterruptedException e) { e.printStackTrace(); };
 		try {
 			out.writeObject(object);

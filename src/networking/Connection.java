@@ -79,6 +79,7 @@ public class Connection {
 	}
 	
 	public void send(String msg) {
+		console.debug("Outgoing command on MAIN-Channel: " + msg);
 		main_channel.send(msg);
 	}
 	
