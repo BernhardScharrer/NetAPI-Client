@@ -23,13 +23,23 @@ public abstract class ObjectChannel extends Channel {
 	@Override
 	void createIO() {
 		
+		Object obj = null;
+		
 		try {
 			in = new ObjectInputStream(super.socket.getInputStream());
 			out = new ObjectOutputStream(super.socket.getOutputStream());
 			
+			while ((obj = in.readObject()) != null) {
+				console.error("Incoming object: " + obj.toString());
+				recieve(obj);
+			}
+			
 			console.debug("Succesfully set up Object-IO!");
 			
 		} catch (IOException e) {
+			console.error("IO-Excpetion occured while object was incoming.");
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 		
@@ -46,5 +56,11 @@ public abstract class ObjectChannel extends Channel {
 		}
 		
 	}
+	
+	/**
+	 * abstract methods
+	 */
+	
+	protected abstract void recieve(Object obj);
 	
 }
