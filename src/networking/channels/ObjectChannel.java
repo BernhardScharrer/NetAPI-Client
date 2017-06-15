@@ -1,5 +1,6 @@
 package networking.channels;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -53,7 +54,10 @@ public abstract class ObjectChannel extends Channel {
 			}
 			
 			console.debug("Succesfully set up Object-IO!");
-			
+		
+		} catch (EOFException e) {
+			console.warn("Lost connection to server! (EOF)");
+			con.close();
 		} catch (SocketException e) {
 			console.warn("Lost connection to server!");
 			con.close();
