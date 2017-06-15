@@ -3,6 +3,7 @@ package networking.channels;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.SocketException;
 
 /**
  * represents an object channel
@@ -44,14 +45,18 @@ public abstract class ObjectChannel extends Channel {
 			out = new ObjectOutputStream(super.socket.getOutputStream());
 			
 			console.debug("Succesfully set up object stream! ("+super.getName()+")");
+			super.ready = true;
 			
 			while ((obj = in.readObject()) != null) {
-				console.error("Incoming object: " + obj.toString());
+				console.debug("Incoming object: " + obj.toString());
 				recieve(obj);
 			}
 			
 			console.debug("Succesfully set up Object-IO!");
 			
+		} catch (SocketException e) {
+			console.warn("Lost connection to server!");
+			con.close();
 		} catch (IOException e) {
 			console.error("IO-Excpetion occured while object was incoming.");
 			e.printStackTrace();
