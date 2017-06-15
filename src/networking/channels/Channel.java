@@ -55,7 +55,7 @@ public abstract class Channel {
 					e.printStackTrace();
 				} catch (IOException e) {
 					console.error("Couldn't setup IO! ("+con.getIP()+":"+con.getPort()+")");
-					e.printStackTrace();
+					System.exit(-1);
 				}
 			}
 		});
@@ -75,6 +75,14 @@ public abstract class Channel {
 			console.error("Could not close socket for channel: "+name);
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * getters
+	 */
+	
+	public String getName() {
+		return name;
 	}
 
 }
