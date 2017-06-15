@@ -23,8 +23,9 @@ public class Connection {
 	
 	private List<Channel> channels = new ArrayList<>();
 	
+	private int uuid = -1;
+	
 	public Connection(String ip, int port, Console console) {
-		
 		console.info("Client is going to start now!");
 		
 		this.ip = ip;
@@ -37,6 +38,12 @@ public class Connection {
 		
 		this.main.waitLoading();
 		
+		while (uuid == -1)
+		try { Thread.sleep(50); }
+		catch (InterruptedException e) { e.printStackTrace(); }
+		
+		console.info("UUID has been verified!");
+		
 	}
 	
 	/**
@@ -46,7 +53,7 @@ public class Connection {
 		
 		channel.init(this, console);
 		next = channel;
-		sendToServer("channel;"+channel.getType()+";"+channel.getName());
+		sendToServer("channel;"+uuid+";"+channel.getType()+";"+channel.getName());
 		
 		channel.waitLoading();
 		
@@ -94,6 +101,10 @@ public class Connection {
 		String[] args = msg.split(";");
 		
 		switch (args[0]) {
+		
+		case "uuid":
+			this.uuid = Integer.parseInt(args[1]);
+			break;
 		
 		case "channel":
 			if (args[1].equals("accept")) {
