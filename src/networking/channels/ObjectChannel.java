@@ -42,8 +42,17 @@ public abstract class ObjectChannel extends Channel {
 		Object obj = null;
 		
 		try {
+			
+			console.debug("Start binding IN-Socket...");
+			
 			in = new ObjectInputStream(super.socket.getInputStream());
+			
+			console.debug("Finished!");
+			console.debug("Start binding OUT-Socket...");
+			
 			out = new ObjectOutputStream(super.socket.getOutputStream());
+			
+			console.debug("Finished!");
 			
 			console.debug("Succesfully set up object stream! ("+super.getName()+")");
 			super.ready = true;
@@ -63,7 +72,7 @@ public abstract class ObjectChannel extends Channel {
 			con.close();
 		} catch (IOException e) {
 			console.error("IO-Excpetion occured while object was incoming.");
-			e.printStackTrace();
+			con.close();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -74,8 +83,8 @@ public abstract class ObjectChannel extends Channel {
 	void closeIO() {
 		
 		try {
-			in.close();
-			out.close();
+			if (in!=null) in.close(); else console.warn("IN-Stream was already closed!");
+			if (out!=null) out.close(); else console.warn("OUT-Stream was already closed!");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

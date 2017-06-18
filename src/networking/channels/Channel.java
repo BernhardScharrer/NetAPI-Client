@@ -50,12 +50,13 @@ public abstract class Channel {
 				console.debug("Started channel " + name);
 				try {
 					socket = new Socket(con.getIP(), con.getPort());
+					console.debug("Catched socket");
 					createIO();
 				} catch (UnknownHostException e) {
 					console.error("Unknown host! ("+con.getIP()+":"+con.getPort()+")");
 					e.printStackTrace();
 				} catch (IOException e) {
-					console.error("Couldn't setup IO! ("+con.getIP()+":"+con.getPort()+")");
+					console.error("Couldn't set up IO! ("+con.getIP()+":"+con.getPort()+")");
 					System.exit(-1);
 				}
 			}
