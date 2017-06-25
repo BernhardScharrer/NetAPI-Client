@@ -24,6 +24,12 @@ public abstract class ObjectChannel extends Channel {
 	
 	void send(Object object) {
 		try {
+			
+
+			console.info("\n-------------------------");
+	        console.info("OUT --> " + object.toString());
+	        console.info("-------------------------\n");
+			
 			out.writeObject(object);
 			out.flush();
 		} catch (IOException e) {
@@ -58,7 +64,9 @@ public abstract class ObjectChannel extends Channel {
 			super.ready = true;
 			
 			while ((obj = in.readObject()) != null) {
-				console.debug("Incoming object: " + obj.toString());
+		        console.info("\n-------------------------");
+		        console.info("IN <-- " + obj.toString());
+		        console.info("-------------------------\n");
 				recieve(obj);
 			}
 			
