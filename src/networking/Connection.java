@@ -12,7 +12,7 @@ import networking.utils.Console;
  * servers will only allow one connection
  * per client.
  */
-public class Connection {
+public abstract class Connection {
 	
 	private String ip;
 	private int port;
@@ -121,6 +121,8 @@ public class Connection {
 		}
 		
 	}
+	
+	public abstract void lostConnection(ErrorType error);
 	
 	
 }

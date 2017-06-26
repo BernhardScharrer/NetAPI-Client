@@ -6,6 +6,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.SocketException;
 
+import networking.ErrorType;
+
 /**
  * represents an object channel
  */
@@ -74,12 +76,15 @@ public abstract class ObjectChannel extends Channel {
 		
 		} catch (EOFException e) {
 			console.warn("Lost connection to server! (EOF)");
+			con.lostConnection(ErrorType.EOF);
 			con.close();
 		} catch (SocketException e) {
 			console.warn("Lost connection to server!");
+			con.lostConnection(ErrorType.NO_ERROR);
 			con.close();
 		} catch (IOException e) {
 			console.error("IO-Excpetion occured while object was incoming.");
+			con.lostConnection(ErrorType.NO_ERROR);
 			con.close();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
