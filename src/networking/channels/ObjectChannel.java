@@ -16,6 +16,8 @@ public abstract class ObjectChannel extends Channel {
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
 	
+	private boolean sending;
+	
 	public ObjectChannel(String name) {
 		super(name);
 	}
@@ -27,16 +29,24 @@ public abstract class ObjectChannel extends Channel {
 	void send(Object object) {
 		try {
 			
-
-			console.info("\n-------------------------");
+			/**
+			 * wait when someone is sending currently
+			 */
+			while (sending) try { Thread.sleep(20); } catch (InterruptedException e) { e.printStackTrace(); }
+			
+			sending = true;
+			
 	        console.info("OUT --> " + object.toString());
-	        console.info("-------------------------\n");
 			
 			out.writeObject(object);
 			out.flush();
+			
+			sending = false;
+			
 		} catch (IOException e) {
 			console.error("Error while trying to sned object!");
 			e.printStackTrace();
+			sending = false;
 		}
 	}
 	
@@ -66,9 +76,7 @@ public abstract class ObjectChannel extends Channel {
 			super.ready = true;
 			
 			while ((obj = in.readObject()) != null) {
-		        console.info("\n-------------------------");
 		        console.info("IN <-- " + obj.toString());
-		        console.info("-------------------------\n");
 				recieve(obj);
 			}
 			
