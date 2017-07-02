@@ -55,6 +55,7 @@ public abstract class Channel {
 					createIO();
 				} catch (UnknownHostException e) {
 					console.error("Unknown host! ("+con.getIP()+":"+con.getPort()+")");
+					con.lostConnection(ErrorType.SERVER_IS_OFFLINE);
 					e.printStackTrace();
 				} catch (IOException e) {
 					console.error("Couldn't set up IO! ("+con.getIP()+":"+con.getPort()+")");
