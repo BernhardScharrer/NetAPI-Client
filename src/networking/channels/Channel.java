@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import networking.Connection;
+import networking.ErrorType;
 import networking.utils.Console;
 
 /**
@@ -57,6 +58,7 @@ public abstract class Channel {
 					e.printStackTrace();
 				} catch (IOException e) {
 					console.error("Couldn't set up IO! ("+con.getIP()+":"+con.getPort()+")");
+					con.lostConnection(ErrorType.SERVER_IS_OFFLINE);
 					System.exit(-1);
 				}
 			}
