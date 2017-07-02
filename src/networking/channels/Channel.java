@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import networking.Connection;
+import networking.ErrorType;
 import networking.utils.Console;
 
 /**
@@ -34,7 +35,6 @@ public abstract class Channel {
 	/**
 	 * abstract methods
 	 */
-	
 	abstract void createIO();
 	abstract void closeIO();
 	public abstract ChannelType getType();
@@ -54,9 +54,11 @@ public abstract class Channel {
 					createIO();
 				} catch (UnknownHostException e) {
 					console.error("Unknown host! ("+con.getIP()+":"+con.getPort()+")");
+					con.lostConnection(ErrorType.SERVER_IS_OFFLINE);
 					e.printStackTrace();
 				} catch (IOException e) {
 					console.error("Couldn't set up IO! ("+con.getIP()+":"+con.getPort()+")");
+					con.lostConnection(ErrorType.SERVER_IS_OFFLINE);
 					System.exit(-1);
 				}
 			}
