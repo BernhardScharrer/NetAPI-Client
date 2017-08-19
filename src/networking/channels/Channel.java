@@ -59,7 +59,6 @@ public abstract class Channel {
 				} catch (IOException e) {
 					console.error("Couldn't set up IO! ("+con.getIP()+":"+con.getPort()+")");
 					con.lostConnection(ErrorType.SERVER_IS_OFFLINE);
-					System.exit(-1);
 				}
 			}
 		});
