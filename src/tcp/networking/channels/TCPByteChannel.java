@@ -1,16 +1,16 @@
-package networking.channels;
+package tcp.networking.channels;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public abstract class ByteChannel extends Channel {
+public abstract class TCPByteChannel extends TCPChannel {
 
 	private InputStream in;
 	private OutputStream out;
 	private byte[] buffer;
 	
-	public ByteChannel(String name, int size) {
+	public TCPByteChannel(String name, int size) {
 		super(name);
 		buffer = new byte[size];
 	}
@@ -68,8 +68,8 @@ public abstract class ByteChannel extends Channel {
 	}
 
 	@Override
-	public ChannelType getType() {
-		return ChannelType.BYTE;
+	public TCPChannelType getType() {
+		return TCPChannelType.BYTE;
 	}
 	
 	/**

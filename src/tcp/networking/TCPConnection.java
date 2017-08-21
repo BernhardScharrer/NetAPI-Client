@@ -1,38 +1,39 @@
-package networking;
+package tcp.networking;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import networking.channels.Channel;
-import networking.channels.MainChannel;
-import networking.utils.Console;
+import tcp.networking.channels.TCPChannel;
+import tcp.networking.channels.TCPMainChannel;
+import utils.Console;
+import utils.ErrorType;
 
 /**
  * represents a connection to a server.
  * servers will only allow one connection
  * per client.
  */
-public abstract class Connection {
+public abstract class TCPConnection {
 	
 	private String ip;
 	private int port;
 	private Console console;
-	private MainChannel main;
+	private TCPMainChannel main;
 	
-	private Channel next = null;
+	private TCPChannel next = null;
 	
-	private List<Channel> channels = new ArrayList<>();
+	private List<TCPChannel> channels = new ArrayList<>();
 	
 	private int uuid = -1;
 	
-	public Connection(String ip, int port, Console console) {
+	public TCPConnection(String ip, int port, Console console) {
 		console.info("Client is going to start now!");
 		
 		this.ip = ip;
 		this.port = port;
 		this.console = console;
 		
-		this.main = new MainChannel();
+		this.main = new TCPMainChannel();
 		this.main.init(this, console);
 		this.main.start();
 		
@@ -49,7 +50,7 @@ public abstract class Connection {
 	/**
 	 * add a channel to this connection
 	 */
-	public void addChannel(Channel channel) {
+	public void addChannel(TCPChannel channel) {
 		
 		channel.init(this, console);
 		next = channel;
@@ -64,11 +65,11 @@ public abstract class Connection {
 	 */
 	public void close() {
 		main.stop();
-		for (Channel channel : channels) channel.stop();
+		for (TCPChannel channel : channels) channel.stop();
 	}
 	
-	public Channel getChannel(String name) {
-		for (Channel channel : channels) if (channel.getName().equals(name)) return channel;
+	public TCPChannel getChannel(String name) {
+		for (TCPChannel channel : channels) if (channel.getName().equals(name)) return channel;
 		return null;
 	}
 	

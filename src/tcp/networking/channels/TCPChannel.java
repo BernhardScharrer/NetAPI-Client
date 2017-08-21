@@ -1,33 +1,33 @@
-package networking.channels;
+package tcp.networking.channels;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import networking.Connection;
-import networking.ErrorType;
-import networking.utils.Console;
+import tcp.networking.TCPConnection;
+import utils.Console;
+import utils.ErrorType;
 
 /**
  *
  * represents an abstract channel on a connection
  *
  */
-public abstract class Channel {
+public abstract class TCPChannel {
 	
 	private String name;
 	private Thread channel;
 	
 	protected Socket socket;
-	protected Connection con;
+	protected TCPConnection con;
 	protected Console console;
 	protected boolean ready;
 	
-	public Channel(String name) {
+	public TCPChannel(String name) {
 		this.name = name;
 	}
 	
-	public void init(Connection con, Console console) {
+	public void init(TCPConnection con, Console console) {
 		this.con = con;
 		this.console = console;
 	}
@@ -37,7 +37,7 @@ public abstract class Channel {
 	 */
 	abstract void createIO();
 	abstract void closeIO();
-	public abstract ChannelType getType();
+	public abstract TCPChannelType getType();
 	
 	/**
 	 * starts the channel

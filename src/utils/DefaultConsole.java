@@ -1,6 +1,4 @@
-package networking;
-
-import networking.utils.Console;
+package utils;
 
 public class DefaultConsole implements Console {
 

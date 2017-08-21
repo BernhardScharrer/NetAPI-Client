@@ -1,8 +1,10 @@
-package networking.channels;
+package tcp.networking.channels;
 
-public abstract class PacketChannel extends ObjectChannel {
+import utils.Packet;
 
-	public PacketChannel(String name) {
+public abstract class TCPPacketChannel extends TCPObjectChannel {
+
+	public TCPPacketChannel(String name) {
 		super(name);
 	}
 
@@ -24,8 +26,8 @@ public abstract class PacketChannel extends ObjectChannel {
 	}
 
 	@Override
-	public ChannelType getType() {
-		return ChannelType.PACKET;
+	public TCPChannelType getType() {
+		return TCPChannelType.PACKET;
 	}
 	
 	/**
