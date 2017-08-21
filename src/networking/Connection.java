@@ -5,6 +5,8 @@ import java.util.List;
 
 import networking.channels.Channel;
 import networking.channels.MainChannel;
+import networking.channels.UDPReceiver;
+import networking.channels.UDPSender;
 import utils.Console;
 import utils.ErrorType;
 
@@ -25,6 +27,9 @@ public abstract class Connection {
 	private List<Channel> channels = new ArrayList<>();
 	
 	private int uuid = -1;
+	
+	private UDPReceiver udp_receiver;
+	private UDPSender udp_sender;
 	
 	public Connection(String ip, int port, Console console) {
 		console.info("Client is going to start now!");
@@ -64,6 +69,8 @@ public abstract class Connection {
 	 * closes connection
 	 */
 	public void close() {
+		if (udp_sender != null) udp_sender.close();
+		if (udp_receiver != null) udp_receiver.close();
 		main.stop();
 		for (Channel channel : channels) channel.stop();
 	}
@@ -118,12 +125,45 @@ public abstract class Connection {
 				}
 			}
 			break;
-		
+		case "udp":
+			if (args.length==4) {
+				if (args[1].equals("receive")) {
+					startUDPReceiver(Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+				} else if (args[1].equals("send")) {
+					startUDPSender(Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+				}
+			}
+			break;
 		}
 		
 	}
 	
 	public abstract void lostConnection(ErrorType error);
 	
+	/**
+	 * enable udp sender
+	 * @return 
+	 */
+	private UDPSender startUDPSender(int port, int buffer_length) {
+		udp_sender = new UDPSender(ip, port, buffer_length, console);
+		return udp_sender;
+	}
+	
+	/**
+	 * enable udp receiver
+	 * @return 
+	 */
+	private UDPReceiver startUDPReceiver(int port, int buffer_length) {
+		udp_receiver = new UDPReceiver(ip, port, buffer_length, console);
+		return udp_receiver;
+	}
+	
+	public UDPReceiver getUDPReceiver() {
+		return udp_receiver;
+	}
+	
+	public UDPSender getUDPSender() {
+		return udp_sender;
+	}
 	
 }
