@@ -1,4 +1,4 @@
-package tcp.networking.channels;
+package networking.channels;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -11,14 +11,14 @@ import utils.ErrorType;
 /**
  * represents an object channel
  */
-public abstract class TCPObjectChannel extends TCPChannel {
+public abstract class ObjectChannel extends Channel {
 
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
 	
 	private boolean sending;
 	
-	public TCPObjectChannel(String name) {
+	public ObjectChannel(String name) {
 		super(name);
 	}
 	
