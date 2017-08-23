@@ -45,10 +45,8 @@ public abstract class ObjectChannel extends Channel {
 			
 		} catch (IOException e) {
 			console.error("Error while trying to send object!");
-			e.printStackTrace();
+			con.close();
 			sending = false;
-		} finally {
-			super.con.close();
 		}
 	}
 	
