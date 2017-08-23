@@ -44,9 +44,11 @@ public abstract class ObjectChannel extends Channel {
 			sending = false;
 			
 		} catch (IOException e) {
-			console.error("Error while trying to sned object!");
+			console.error("Error while trying to send object!");
 			e.printStackTrace();
 			sending = false;
+		} finally {
+			super.con.close();
 		}
 	}
 	
@@ -104,8 +106,10 @@ public abstract class ObjectChannel extends Channel {
 	void closeIO() {
 		
 		try {
-			if (in!=null) in.close(); else console.warn("IN-Stream was already closed!");
-			if (out!=null) out.close(); else console.warn("OUT-Stream was already closed!");
+			if (in!=null) in.close();
+			else console.warn("IN-Stream was already closed!");
+			if (out!=null) out.close();
+			else console.warn("OUT-Stream was already closed!");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

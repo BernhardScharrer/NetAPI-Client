@@ -55,10 +55,12 @@ public abstract class Channel {
 				} catch (UnknownHostException e) {
 					console.error("Unknown host! ("+con.getIP()+":"+con.getPort()+")");
 					con.lostConnection(ErrorType.SERVER_IS_OFFLINE);
+					con.close();
 					e.printStackTrace();
 				} catch (IOException e) {
 					console.error("Couldn't set up IO! ("+con.getIP()+":"+con.getPort()+")");
 					con.lostConnection(ErrorType.SERVER_IS_OFFLINE);
+					con.close();
 				}
 			}
 		});

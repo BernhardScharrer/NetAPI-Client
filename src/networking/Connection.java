@@ -46,7 +46,11 @@ public abstract class Connection {
 		
 		while (uuid == -1)
 		try { Thread.sleep(50); }
-		catch (InterruptedException e) { e.printStackTrace(); }
+		catch (InterruptedException e) {
+			close();
+			console.error("Interrupted while waiting main channel setup.");
+			System.exit(0);
+		}
 		
 		console.info("UUID has been verified!");
 		
@@ -71,7 +75,7 @@ public abstract class Connection {
 	public void close() {
 		if (udp_sender != null) udp_sender.close();
 		if (udp_receiver != null) udp_receiver.close();
-		main.stop();
+		if (main != null) main.stop();
 		for (Channel channel : channels) channel.stop();
 	}
 	
