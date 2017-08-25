@@ -25,28 +25,32 @@ public class UDPSender {
 	 * @param buffer_length
 	 * @param console
 	 */
-	public UDPSender(String ip, int port, int buffer_length, Console console) {
+	public UDPSender(final String ip, final int port, final int buffer_length, final Console console) {
 		
 		console.info("Started UDP sender on "+ip+":"+port);
 		
-		sender = new Thread(() -> {
-			
-			try {
-			
-				this.socket = new DatagramSocket();
-				while (true) {
-					this.packet = new DatagramPacket(msg.getBytes(), msg.length(), InetAddress.getByName(ip), port);
-					this.socket.send(packet);
+		sender = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+
+				try {
+
+					UDPSender.this.socket = new DatagramSocket();
+					while (true) {
+						UDPSender.this.packet = new DatagramPacket(msg.getBytes(), msg.length(), InetAddress.getByName(ip), port);
+						UDPSender.this.socket.send(packet);
+					}
+
+				} catch (SocketException e) {
+					console.error("Can't bind socket to " + ip + ":" + port);
+				} catch (UnknownHostException e) {
+					console.error("Unknown host: " + ip + ":" + port);
+				} catch (IOException e) {
+					console.error("IO-Exception occured at " + ip + ":" + port);
 				}
-				
-			} catch (SocketException e) {
-				console.error("Can't bind socket to "+ip+":"+port);
-			} catch (UnknownHostException e) {
-				console.error("Unknown host: "+ip+":"+port);
-			} catch (IOException e) {
-				console.error("IO-Exception occured at "+ip+":"+port);
+
 			}
-			
 		});
 		
 		sender.start();

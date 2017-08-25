@@ -23,27 +23,32 @@ public class UDPReceiver {
 	 * @param buffer_length
 	 * @param console
 	 */
-	public UDPReceiver(String ip, int port, int buffer_length, Console console) {
+	public UDPReceiver(final String ip, final int port, final int buffer_length, final Console console) {
 		
 		console.info("Started UDP receiver on "+ip+":"+port);
 		this.buffer_length = buffer_length;
 		this.buffer = new byte[buffer_length];
 		
-		receiver = new Thread(() -> {
-			
-			try {
-				socket = new DatagramSocket(port);
-				while (true) {
-					packet = new DatagramPacket(buffer, buffer_length);
-					socket.receive(packet);
+		receiver = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+
+				try {
+					socket = new DatagramSocket(port);
+					while (true) {
+						packet = new DatagramPacket(buffer, buffer_length);
+						socket.receive(packet);
+					}
+
+				} catch (SocketException e) {
+					console.error("Can't bind socket to " + ip + ":" + port);
+				} catch (IOException e) {
+					console.error("IO-Exception occured at " + ip + ":" + port);
 				}
-				
-			} catch (SocketException e) {
-				console.error("Can't bind socket to "+ip+":"+port);
-			} catch (IOException e) {
-				console.error("IO-Exception occured at "+ip+":"+port);
+
 			}
-			
+
 		});
 		
 		receiver.start();

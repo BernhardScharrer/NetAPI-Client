@@ -73,9 +73,9 @@ public abstract class Channel {
 	 */
 	public void stop() {
 		try {
-			channel.interrupt();
+			if (channel != null) channel.interrupt();
 			closeIO();
-			socket.close();
+			if (socket != null) socket.close();
 		} catch (IOException e) {
 			console.error("Could not close socket for channel: "+name);
 			e.printStackTrace();
