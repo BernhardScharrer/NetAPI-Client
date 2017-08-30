@@ -1,2 +1,9 @@
-# Networking_Client
-Networking API for Java
+## NetAPI - Client
+
+* **Features**
+> - TCP
+> - UDP
+
+>
+>
+>
