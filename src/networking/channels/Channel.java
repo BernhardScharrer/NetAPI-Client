@@ -1,6 +1,7 @@
 package networking.channels;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -49,7 +50,8 @@ public abstract class Channel {
 			public void run() {
 				console.debug("Started channel " + name);
 				try {
-					socket = new Socket(con.getIP(), con.getPort());
+					socket = new Socket();
+					socket.connect(new InetSocketAddress(con.getIP(), con.getPort()), 3000);
 					console.debug("Catched socket");
 					createIO();
 				} catch (UnknownHostException e) {
