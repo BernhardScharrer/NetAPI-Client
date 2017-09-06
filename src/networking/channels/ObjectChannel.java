@@ -87,12 +87,12 @@ public abstract class ObjectChannel extends Channel {
 			con.lostConnection(ErrorType.EOF);
 			con.close();
 		} catch (SocketException e) {
-			console.warn("Lost connection to server!");
+			console.warn("Lost connection to server! (" + e.getMessage()+")");
 			con.lostConnection(ErrorType.NO_ERROR);
 			con.close();
 		} catch (IOException e) {
 			console.error("IO-Excpetion occured while object was incoming.");
-			con.lostConnection(ErrorType.NO_ERROR);
+			con.lostConnection(ErrorType.IO);
 			con.close();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
