@@ -36,7 +36,7 @@ public abstract class ObjectChannel extends Channel {
 			
 			sending = true;
 			
-	        console.info("OUT --> " + object.toString());
+	        console.debug("OUT --> " + object.toString());
 			
 			out.writeObject(object);
 			out.flush();
@@ -76,7 +76,7 @@ public abstract class ObjectChannel extends Channel {
 			super.ready = true;
 			
 			while ((obj = in.readObject()) != null) {
-		        console.info("IN <-- " + obj.toString());
+		        console.debug("IN <-- " + obj.toString());
 				recieve(obj);
 			}
 			
@@ -105,9 +105,9 @@ public abstract class ObjectChannel extends Channel {
 		
 		try {
 			if (in!=null) in.close();
-			else console.warn("IN-Stream was already closed!");
+			else console.debug("IN-Stream was already closed!");
 			if (out!=null) out.close();
-			else console.warn("OUT-Stream was already closed!");
+			else console.debug("OUT-Stream was already closed!");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

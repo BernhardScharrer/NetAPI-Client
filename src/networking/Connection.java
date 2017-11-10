@@ -32,7 +32,6 @@ public abstract class Connection {
 	private UDPSender udp_sender;
 	
 	public Connection(String ip, int port, Console console) {
-		console.info("Client is going to start now!");
 		
 		this.ip = ip;
 		this.port = port;
@@ -52,7 +51,7 @@ public abstract class Connection {
 			System.exit(0);
 		}
 		
-		console.info("UUID has been verified!");
+		console.debug("UUID has been verified!");
 		
 	}
 	
@@ -72,7 +71,7 @@ public abstract class Connection {
 	/**
 	 * closes connection
 	 */
-	public void close() {
+	public synchronized void close() {
 		if (udp_sender != null) udp_sender.close();
 		if (udp_receiver != null) udp_receiver.close();
 		if (main != null) main.stop();
