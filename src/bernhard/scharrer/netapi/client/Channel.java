@@ -96,7 +96,6 @@ class Channel {
 							packet = (Packet) obj;
 							if (packet instanceof Message) {
 								msg = (String) packet.getEntry("MSG");
-								console.debug("Incoming message: "+msg);
 								listener.receive(msg);
 								msg = null;
 							} else {
@@ -110,6 +109,7 @@ class Channel {
 						console.error("Unknown class! (Class: "+e.getClass().getName()+")");
 						continue;
 					} catch (IOException e) {
+						console.debug("Stream broke down.");
 						client.cleanUp();
 						break;
 					}
@@ -122,6 +122,7 @@ class Channel {
 	}
 
 	public void cleanUp() {
+		listener.disconnect();
 		receiver.interrupt();
 		console.debug("Cleaning up channel.");
 	}
