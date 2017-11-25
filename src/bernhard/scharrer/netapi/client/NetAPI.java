@@ -2,23 +2,18 @@ package bernhard.scharrer.netapi.client;
 
 public class NetAPI {
 	
+	private static final int NO_UDP = -1;
 	private static Client client;
 	
 	public static Client start(String ip, int port, TrafficListener listener) {
 		printHeadline();
-		client = new Client(ip, port, listener, new LinuxConsole(false));
-		return client;
-	}
-	
-	public static Client start(boolean headline, boolean debug, String ip, int port, TrafficListener listener) {
-		if (headline) printHeadline();
-		client = new Client(ip, port, listener, new LinuxConsole(debug));
+		client = new Client(ip, port, NO_UDP, listener, new LinuxConsole(false));
 		return client;
 	}
 	
 	public static Client start(boolean headline, Console console, String ip, int port, TrafficListener listener) {
 		if (headline) printHeadline();
-		client = new Client(ip, port, listener, console);
+		client = new Client(ip, port, NO_UDP, listener, console);
 		return client;
 	}
 	

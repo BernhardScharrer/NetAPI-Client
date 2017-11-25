@@ -12,7 +12,7 @@ public class Client {
 	private Socket socket;
 	private Console console;
 	
-	Client(String ip, int port, TrafficListener listener, Console console) {
+	Client(String ip, int port, int buffer_length, TrafficListener listener, Console console) {
 		
 		this.console = console;
 		
