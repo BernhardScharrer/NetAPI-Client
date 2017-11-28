@@ -17,6 +17,12 @@ public class NetAPI {
 		return client;
 	}
 	
+	public static Client start(boolean headline, Console console, String ip, int port, int buffer_length, TrafficListener listener) {
+		if (headline) printHeadline();
+		client = new Client(ip, port, buffer_length, listener, console);
+		return client;
+	}
+	
 	private static void printHeadline() {
 		System.out.println("\n ____  _____        _        _       _______  _____  ");
 		System.out.println("|_   \\|_   _|      / |_     / \\     |_   __ \\|_   _| ");

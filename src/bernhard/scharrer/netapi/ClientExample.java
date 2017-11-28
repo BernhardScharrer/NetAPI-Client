@@ -10,8 +10,8 @@ import bernhard.scharrer.netapi.packet.Packet;
 public class ClientExample {
 	
 	public static void main(String[] args) {
-		final Console console = new WindowsConsole(false);
-		Client client = NetAPI.start(true, console, "localhost", 7777, new TrafficListener() {
+		final Console console = new WindowsConsole(true);
+		Client client = NetAPI.start(true, console, "localhost", 7777, 1, new TrafficListener() {
 			@Override
 			public void receive(Packet packet) {
 				console.debug("Incoming: "+packet.toString());
@@ -25,6 +25,16 @@ public class ClientExample {
 			@Override
 			public void disconnect() {
 				console.info("Connection closed.");
+			}
+
+			@Override
+			public void receive(int[] data) {
+				System.out.println(data[0]);
+			}
+
+			@Override
+			public void receive(float[] data) {
+				
 			}
 		});
 		

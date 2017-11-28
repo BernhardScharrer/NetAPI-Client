@@ -8,7 +8,10 @@ import bernhard.scharrer.netapi.packet.Packet;
 
 public class Client {
 	
+	private static final int NO_UDP = -1;
+	
 	private Channel channel;
+	private DatagramHandler datagrams;
 	private Socket socket;
 	private Console console;
 	
@@ -20,6 +23,7 @@ public class Client {
 			socket = new Socket(ip, port);
 			console.debug("Succesfully connected to server!");
 			channel = new Channel(this, socket, listener, console);
+			if (buffer_length != NO_UDP) datagrams = new DatagramHandler(listener, console, ip, port, buffer_length);
 			console.debug("Succesfully created streams!");
 		} catch (UnknownHostException e) {
 			console.error("Could not resolve host: "+ip);
@@ -39,6 +43,10 @@ public class Client {
 		channel.send(packet);
 	}
 	
+	public void send(int[] data) {
+		datagrams.send(data);
+	}
+	
 	void cleanUp() {
 		if (socket != null && !socket.isClosed()) {
 			try {
@@ -51,6 +59,11 @@ public class Client {
 		if (channel != null) {
 			channel.cleanUp();
 		}
+		
+		if (datagrams != null) {
+			datagrams.cleanUp();
+		}
+		
 		System.exit(0);
 	}
 	
