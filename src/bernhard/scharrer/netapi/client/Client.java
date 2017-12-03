@@ -63,8 +63,6 @@ public class Client {
 		if (datagrams != null) {
 			datagrams.cleanUp();
 		}
-		
-		System.exit(0);
 	}
 	
 }
