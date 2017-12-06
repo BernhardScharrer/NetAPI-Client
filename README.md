@@ -1,6 +1,6 @@
 ## NetAPI - Client
 
-![GitHub Logo](/NetAPI.png)
+![GitHub Logo](/NetAPIv2.0.png)
 
 -----------
 * **FEATURES**
