@@ -96,7 +96,18 @@ class TCPChannel {
 							packet = (Packet) obj;
 							if (packet instanceof Message) {
 								msg = (String) packet.getEntry("MSG");
-								listener.receive(msg);
+								if (msg.startsWith("\r\r\r")) {
+									String[] data = msg.split(";");
+									if (data.length==4) {
+										int port = Integer.parseInt(data[1]);
+										int buffer = Integer.parseInt(data[2]);
+										int cuid = Integer.parseInt(data[3]);
+										console.debug("Setting up udp channel. (port: "+port+", buffer lengeth:"+buffer+", cuid:"+cuid+")");
+										client.initUDP(port, buffer, cuid);
+									} else console.warn("Server does not allow udp.");
+								} else {
+									listener.receive(msg);
+								}
 								msg = null;
 							} else {
 								console.debug("Incoming packet: "+packet.getName());

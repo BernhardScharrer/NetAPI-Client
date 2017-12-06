@@ -15,34 +15,30 @@ public class Client {
 	
 	private String ip;
 	private int port;
-	private int uport;
-	private int buffer_length;
 	
 	private Console console;
 	private TCPModul tcp;
 	private UDPModul udp;
 	
-	private boolean udp_binded;
 	private boolean initialized;
 	private boolean started;
 	private boolean closed;
 	private boolean headline;
 	
-	Client(String ip, int port, TCPModul tcp, Console console) {
+	Client(String ip, int port, TCPModul tcp, UDPModul udp, Console console) {
 		
 		this.ip = ip;
 		this.port = port;
 		this.console = console;
 		this.tcp = tcp;
+		this.udp = udp;
 		initialized = true;
 		
 	}
 	
-	void initUDP(UDPModul udp, int uport, int buffer_length) {
-		this.udp = udp;
-		this.buffer_length = buffer_length;
-		this.uport = uport;
-		console.debug("UDP modul was initialized.");
+	void initUDP(int uport, int buffer, int cuid) {
+		console.debug("UDP modul has been initialized.");
+		this.udp_channel = new UDPChannel(this, udp, console, ip, uport, buffer, cuid);
 	}
 	
 	public void start() {
@@ -50,13 +46,18 @@ public class Client {
 		try {
 
 			socket = new Socket(ip, port);
-			console.debug("Succesfully connected to server!");
-			tcp_channel = new TCPChannel(this, socket, tcp, console);
-			if (udp!=null) {
-				udp_channel = new UDPChannel(udp, console, ip, port, buffer_length);
-			}
 			
-			console.debug("Succesfully created streams!");
+			console.debug("Succesfully bound to tcp socket!");
+			tcp_channel = new TCPChannel(this, socket, tcp, console);
+			
+			console.debug("Succesfully created tcp streams!");
+			
+			if (udp!=null) {
+				send("\r\r\r");
+				console.debug("Requesting udp informations from server.");
+			} else {
+				console.debug("Starting without udp modul.");
+			}
 			
 			started = true;
 			
@@ -81,11 +82,11 @@ public class Client {
 	}
 	
 	public void send(String message) {
-		tcp_channel.send(message);
+		if (tcp_channel!=null) tcp_channel.send(message);
 	}
 	
 	public void send(Packet packet) {
-		tcp_channel.send(packet);
+		if (tcp_channel!=null) tcp_channel.send(packet);
 	}
 	
 	public void send(int[] data) {
@@ -107,6 +108,18 @@ public class Client {
 	public Console getConsole() {
 		return console;
 	}
+	
+	public boolean isInitialized() {
+		return initialized;
+	}
+
+	public boolean isStarted() {
+		return started;
+	}
+
+	public boolean isClosed() {
+		return closed;
+	}
 
 	void cleanUp() {
 		if (socket != null && !socket.isClosed()) {
@@ -124,6 +137,8 @@ public class Client {
 		if (udp_channel != null) {
 			udp_channel.cleanUp();
 		}
+		
+		closed = true;
 	}
 	
 	private static void printHeadline() {

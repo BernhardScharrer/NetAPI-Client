@@ -5,6 +5,7 @@ import bernhard.scharrer.netapi.client.Console;
 import bernhard.scharrer.netapi.client.ConsoleType;
 import bernhard.scharrer.netapi.client.NetAPI;
 import bernhard.scharrer.netapi.client.TCPModul;
+import bernhard.scharrer.netapi.client.UDPModul;
 import bernhard.scharrer.netapi.packet.Packet;
 
 public class ClientExample {
@@ -12,7 +13,7 @@ public class ClientExample {
 	private static Console console;
 	
 	public static void main(String[] args) {
-		Client client = NetAPI.start("localhost", 8888, new TCPModul() {
+		Client client = NetAPI.start("4ahel.at", 7788, new TCPModul() {
 			@Override
 			public void receive(Packet packet) {
 				console.debug("Incoming: "+packet.toString());
@@ -27,6 +28,17 @@ public class ClientExample {
 			public void disconnect() {
 				console.info("Connection closed.");
 			}
+		}, new UDPModul() {
+			
+			@Override
+			public void receive(float[] data) {
+				
+			}
+			
+			@Override
+			public void receive(int[] data) {
+				
+			}
 		}, ConsoleType.WINDOWS);
 		
 		console = client.getConsole();
@@ -34,8 +46,6 @@ public class ClientExample {
 		client.setDebugging(true);
 		client.setHeadlineVisible(true);
 		client.start();
-		
-		client.send("test");
 		
 	}
 	
