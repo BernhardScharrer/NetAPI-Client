@@ -1,18 +1,15 @@
 ## NetAPI - Client
------------
+
+-------------
+
+* **OVERVIEW**
+
+![GitHub Logo](/NetAPIv2.0.png)
+
 * **FEATURES**
-> - TCP connections (server-client-model)
-> - multiple channels on one port
 > - multiply sessions by one IP (UUID based)
-> - String channels for messaging
-> - Packet channels for transfering complex seriazable data
-> - byte[] channels for transfering simple (maybe encrypted) data
+> - simple usage for transferinging data (Strings & Packets)
 
 * **IN PROGRESS**
-> - capability for udp sender/reciever
-> - multicast udp sender
-
-* **USAGE**
->
-> - TODO
->
+> - capability for udp
+> - udp multicasting capability
