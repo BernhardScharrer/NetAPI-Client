@@ -5,16 +5,17 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
-public class DatagramHandler {
+public class UDPChannel {
 	
 	private final int INTEGER_PACKET = 0;
 	private final int FLOAT_PACKET = 1;
 	private final int BYTE_SIZE = 4;
 	
-	private TrafficListener trafficListener;
+	private UDPModul udp_modul;
 	private Console console;
 	private Thread listener;
 	
+	private int uport;
 	private int length;
 	private byte[] receive_buffer;
 	private boolean started;
@@ -26,20 +27,20 @@ public class DatagramHandler {
 	private DatagramPacket receiving_packet;
 	private DatagramPacket send_packet;
 	
-	DatagramHandler(TrafficListener trafficListener, Console console, String ip, int port, int length) {
+	UDPChannel(UDPModul udp_modul, Console console, String ip, int uport, int length) {
 		
-		this.trafficListener = trafficListener;
+		this.udp_modul = udp_modul;
 		this.console = console;
 		this.length = length;
 		this.receive_buffer = new byte[BYTE_SIZE*length+1];
 		
 		try {
-			socket = new DatagramSocket(port);
+			socket = new DatagramSocket(uport);
 			receiving_packet = new DatagramPacket(receive_buffer, receive_buffer.length);
 			startListener();
 			started = true;
 		} catch (SocketException e) {
-			// TODO
+			
 		}
 		
 	}
@@ -74,13 +75,13 @@ public class DatagramHandler {
 			for (int i = 0;i<idata.length;i++) {
 				idata[i] = converToInt(receive_buffer, 1+i*BYTE_SIZE);
 			}
-			trafficListener.receive(idata);
+			udp_modul.receive(idata);
 			
 		} else if (receive_buffer[0]==FLOAT_PACKET) {
 			
 			fdata = new float[length];
 			// TODO generate float array
-			trafficListener.receive(fdata);
+			udp_modul.receive(fdata);
 			
 		}
 		
@@ -102,6 +103,10 @@ public class DatagramHandler {
 		} else {
 			console.error("Can't send datagrams before binding socket!");
 		}
+	}
+	
+	void send(float[] buffer) {
+		// TODO
 	}
 	
 	private byte[] generateIntPacket(int[] data) {

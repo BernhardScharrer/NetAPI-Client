@@ -8,7 +8,7 @@ import java.net.Socket;
 import bernhard.scharrer.netapi.packet.Packet;
 import bernhard.scharrer.netapi.packet.Message;
 
-class Channel {
+class TCPChannel {
 
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
@@ -17,9 +17,9 @@ class Channel {
 	private Console console;
 
 	private Client client;
-	private TrafficListener listener;
+	private TCPModul listener;
 	
-	public Channel(Client client, Socket socket, TrafficListener listener, Console console) {
+	public TCPChannel(Client client, Socket socket, TCPModul listener, Console console) {
 		
 		this.client = client;
 		this.console = console;

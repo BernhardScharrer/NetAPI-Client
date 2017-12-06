@@ -1,6 +1,6 @@
 package bernhard.scharrer.netapi.client;
 
-public class WindowsConsole extends Console {
+public class RawConsole extends Console {
 
 	@Override
 	public void debug(String debug) {
@@ -19,7 +19,7 @@ public class WindowsConsole extends Console {
 
 	@Override
 	public void error(String error) {
-		System.err.println("[ERROR] "+error);
+		System.out.println("[ERROR] "+error);
 	}
 	
 }
