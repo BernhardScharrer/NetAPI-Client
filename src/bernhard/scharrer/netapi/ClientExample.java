@@ -47,6 +47,18 @@ public class ClientExample {
 		client.setHeadlineVisible(true);
 		client.start();
 		
+		
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		client.send(new int[] {1,1,1});
+		client.send(new int[] {1,1,1});
+		client.send(new int[] {1,1,1});
+		client.send(new int[] {1,1,1});
+		
 	}
 	
 }
