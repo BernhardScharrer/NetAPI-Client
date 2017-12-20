@@ -12,6 +12,7 @@ public class UDPChannel {
 	private final int INTEGER_PACKET = 0;
 	private final int FLOAT_PACKET = 1;
 	private final int BYTE_SIZE = 4;
+	private final int OFFSET = 4;
 	
 	private UDPModul udp;
 	private Console console;
@@ -25,33 +26,33 @@ public class UDPChannel {
 	private float[] fdata;
 	
 	private InetAddress server;
-	private DatagramSocket usocket_receiving;
-	private DatagramSocket usocket_sending;
+	private DatagramSocket socket;
 	private DatagramPacket receiving_packet;
 	private DatagramPacket send_packet;
 	private int uport;
 
 	UDPChannel(Client client, UDPModul udp, Console console, String ip, int uport, int buffer, int cuid) {
-		this.udp = udp;
-		this.uport = uport;
-		this.buffer = buffer;
-		this.console = console;
-		this.receive_buffer = new byte[BYTE_SIZE*buffer+1];
 		
 		try {
-			this.usocket_receiving = new DatagramSocket(uport);
-			this.usocket_sending = new DatagramSocket();
+			
+			this.udp = udp;
+			this.uport = uport;
+			this.buffer = buffer;
+			this.console = console;
+			this.receive_buffer = new byte[BYTE_SIZE*buffer+OFFSET];
+			this.socket = new DatagramSocket();
 			this.receiving_packet = new DatagramPacket(receive_buffer, receive_buffer.length);
 			this.server = InetAddress.getByName(ip);
+			
+			startListener();
+			
+			started = true;
+			
 		} catch (SocketException e) {
 			e.printStackTrace();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-		
-		startListener();
-		
-		started = true;
 		
 	}
 
@@ -63,7 +64,7 @@ public class UDPChannel {
 				try {
 					console.debug("Starting udp listener.");
 					while (true) {
-						usocket_receiving.receive(receiving_packet);
+						socket.receive(receiving_packet);
 						System.out.println("Received!");
 						receive_buffer = receiving_packet.getData();
 						receive();
@@ -84,7 +85,7 @@ public class UDPChannel {
 			
 			idata = new int[buffer];
 			for (int i = 0;i<idata.length;i++) {
-				idata[i] = converToInt(receive_buffer, 1+i*BYTE_SIZE);
+				idata[i] = converToInt(receive_buffer, OFFSET+i*BYTE_SIZE);
 			}
 			udp.receive(idata);
 			
@@ -99,13 +100,11 @@ public class UDPChannel {
 	}
 	
 	void send(int[] data) {
-		System.out.println("Trying to send");
 		if (started) {
 			if (buffer==data.length) {
 				try {
-					send_packet = new DatagramPacket(generateIntPacket(data), BYTE_SIZE*buffer+1, server, uport);
-					System.out.println("Sending packet!");
-					usocket_sending.send(send_packet);
+					send_packet = new DatagramPacket(generateIntPacket(data), BYTE_SIZE*buffer+OFFSET, server, uport);
+					socket.send(send_packet);
 					System.out.println("Sended!");
 				} catch (IOException e) {
 					console.warn("Stream broke down!");
@@ -124,11 +123,11 @@ public class UDPChannel {
 	}
 	
 	private byte[] generateIntPacket(int[] data) {
-		byte[] datagram = new byte[(BYTE_SIZE*buffer)+1];
+		byte[] datagram = new byte[(BYTE_SIZE*buffer)+OFFSET];
 		int n = 0;
 		datagram[0] = INTEGER_PACKET;
 		for (int i : data) {
-			convertInt(datagram, n++*BYTE_SIZE+1, i);
+			convertInt(datagram, n++*BYTE_SIZE+OFFSET, i);
 		}
 		return datagram;
 	}
@@ -155,8 +154,8 @@ public class UDPChannel {
 			listener.interrupt();
 		}
 		
-		if (usocket_sending!= null&&!usocket_sending.isClosed()) {
-			usocket_sending.close();
+		if (socket!= null&&!socket.isClosed()) {
+			socket.close();
 		}
 		
 		send_packet = null;
