@@ -11,9 +11,10 @@ import bernhard.scharrer.netapi.packet.Packet;
 public class ClientExample {
 	
 	private static Console console;
+	private static Client client;
 	
 	public static void main(String[] args) {
-		Client client = NetAPI.start("4ahel.at", 7788, new TCPModul() {
+		client = NetAPI.start("4ahel.at", 7788, new TCPModul() {
 			@Override
 			public void receive(Packet packet) {
 				console.debug("Incoming: "+packet.toString());
@@ -49,15 +50,12 @@ public class ClientExample {
 		
 		
 		try {
-			Thread.sleep(3000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		
-		client.send(new int[] {1,1,1});
-		client.send(new int[] {1,1,1});
-		client.send(new int[] {1,1,1});
-		client.send(new int[] {1,1,1});
+		client.send(new int[] {1});
 		
 	}
 	

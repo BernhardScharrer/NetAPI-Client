@@ -18,6 +18,8 @@ public class UDPChannel {
 	private Console console;
 	private Thread listener;
 	
+	private int uport;
+	private int cuid;
 	private int buffer;
 	private byte[] receive_buffer;
 	private boolean started;
@@ -29,8 +31,16 @@ public class UDPChannel {
 	private DatagramSocket socket;
 	private DatagramPacket receiving_packet;
 	private DatagramPacket send_packet;
-	private int uport;
 
+	/**
+	 * @param client generall callback
+	 * @param udp callback for receiving data
+	 * @param console for logging purposes
+	 * @param ip server address
+	 * @param uport udp port
+	 * @param buffer length
+	 * @param cuid client id
+	 */
 	UDPChannel(Client client, UDPModul udp, Console console, String ip, int uport, int buffer, int cuid) {
 		
 		try {
@@ -38,6 +48,7 @@ public class UDPChannel {
 			this.udp = udp;
 			this.uport = uport;
 			this.buffer = buffer;
+			this.cuid = cuid;
 			this.console = console;
 			this.receive_buffer = new byte[BYTE_SIZE*buffer+OFFSET];
 			this.socket = new DatagramSocket();
@@ -56,6 +67,9 @@ public class UDPChannel {
 		
 	}
 
+	/**
+	 * starts the udp listener on uport
+	 */
 	private void startListener() {
 		listener = new Thread(new Runnable() {
 
@@ -79,6 +93,9 @@ public class UDPChannel {
 		listener.start();
 	}
 	
+	/**
+	 * receiving data from server
+	 */
 	private synchronized void receive() {
 		
 		if (receive_buffer[0]==INTEGER_PACKET) {
@@ -99,13 +116,17 @@ public class UDPChannel {
 		
 	}
 	
+	/**
+	 * send int data server
+	 * 
+	 * @param data
+	 */
 	void send(int[] data) {
 		if (started) {
 			if (buffer==data.length) {
 				try {
 					send_packet = new DatagramPacket(generateIntPacket(data), BYTE_SIZE*buffer+OFFSET, server, uport);
 					socket.send(send_packet);
-					System.out.println("Sended!");
 				} catch (IOException e) {
 					console.warn("Stream broke down!");
 					cleanUp();
@@ -126,6 +147,7 @@ public class UDPChannel {
 		byte[] datagram = new byte[(BYTE_SIZE*buffer)+OFFSET];
 		int n = 0;
 		datagram[0] = INTEGER_PACKET;
+		datagram[1] = (byte) cuid;
 		for (int i : data) {
 			convertInt(datagram, n++*BYTE_SIZE+OFFSET, i);
 		}
