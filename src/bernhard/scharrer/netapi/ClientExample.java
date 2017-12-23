@@ -14,7 +14,11 @@ public class ClientExample {
 	private static Client client;
 	
 	public static void main(String[] args) {
-		client = NetAPI.start("4ahel.at", 7788, new TCPModul() {
+		client = NetAPI.start("localhost", 7788
+		/**
+		 * tcp modul
+		 */
+		, new TCPModul() {
 			@Override
 			public void receive(Packet packet) {
 				console.debug("Incoming: "+packet.toString());
@@ -29,11 +33,14 @@ public class ClientExample {
 			public void disconnect() {
 				console.info("Connection closed.");
 			}
+		/**
+		 *  udp modul
+		 */
 		}, new UDPModul() {
 			
 			@Override
 			public void receive(float[] data) {
-				
+				for (float d : data) System.out.println(d);
 			}
 			
 			@Override
@@ -55,7 +62,9 @@ public class ClientExample {
 			e.printStackTrace();
 		}
 		
-		client.send(new int[] {1});
+//		for (int n=0;n<1000;n++) {
+//			client.send(new float[] {7.1f,12349.57f,-12349.2f});
+//		}
 		
 	}
 	

@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
 
 public class UDPChannel {
 	
@@ -102,14 +103,16 @@ public class UDPChannel {
 			
 			idata = new int[buffer];
 			for (int i = 0;i<idata.length;i++) {
-				idata[i] = converToInt(receive_buffer, OFFSET+i*BYTE_SIZE);
+				idata[i] = convertToInt(receive_buffer, OFFSET+i*BYTE_SIZE);
 			}
 			udp.receive(idata);
 			
 		} else if (receive_buffer[0]==FLOAT_PACKET) {
 			
 			fdata = new float[buffer];
-			// TODO generate float array
+			for (int f = 0;f<fdata.length;f++) {
+				fdata[f] = convertToFloat(receive_buffer, OFFSET+f*BYTE_SIZE);
+			}
 			udp.receive(fdata);
 			
 		}
@@ -139,8 +142,22 @@ public class UDPChannel {
 		}
 	}
 	
-	void send(float[] buffer) {
-		// TODO
+	void send(float[] data) {
+		if (started) {
+			if (buffer==data.length) {
+				try {
+					send_packet = new DatagramPacket(generateFloatDatagram(data), BYTE_SIZE*buffer+OFFSET, server, uport);
+					socket.send(send_packet);
+				} catch (IOException e) {
+					console.warn("Stream broke down!");
+					cleanUp();
+				}
+			} else {
+				console.warn("Can't send datagram! (length does not match to: "+buffer+")");
+			}
+		} else {
+			console.error("Can't send datagrams before binding socket!");
+		}
 	}
 	
 	private byte[] generateIntPacket(int[] data) {
@@ -154,6 +171,16 @@ public class UDPChannel {
 		return datagram;
 	}
 	
+	private byte[] generateFloatDatagram(float[] data) {
+		byte[] datagram = new byte[(BYTE_SIZE*buffer)+OFFSET];
+		int n = 0;
+		datagram[0] = FLOAT_PACKET;
+		for (float f : data) {
+			convertFloat(datagram, n++*BYTE_SIZE+OFFSET, f);
+		}
+		return datagram;
+	}
+	
 	private void convertInt(byte[] buffer, int start, int value) {
 		buffer[start] = (byte) (value >>> 24);
 		buffer[start+1] = (byte) (value >>> 16);
@@ -161,11 +188,19 @@ public class UDPChannel {
 		buffer[start+3] = (byte) (value);
 	}
 
-	private int converToInt(byte[] buffer, int start) {
+	private int convertToInt(byte[] buffer, int start) {
 		return (buffer[start+3] < 0 ? buffer[start+3] + 256 : buffer[start+3])
 				+ ((buffer[start+2] < 0 ? buffer[start+2] + 256 : buffer[start+2]) << 8)
 				+ ((buffer[start+1] < 0 ? buffer[start+1] + 256 : buffer[start+1]) << 16)
 				+ ((buffer[start] < 0 ? buffer[start] + 256 : buffer[start]) << 24);
+	}
+	
+	private void convertFloat(byte[] buffer, int start, float value) {
+	    ByteBuffer.wrap(buffer, start, OFFSET).putFloat(value);
+	}
+
+	private float convertToFloat(byte[] bytes, int start) {
+	    return ByteBuffer.wrap(bytes,start,OFFSET).getFloat();
 	}
 	
 	void cleanUp() {
