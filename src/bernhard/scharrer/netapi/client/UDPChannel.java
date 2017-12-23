@@ -79,8 +79,8 @@ public class UDPChannel {
 				try {
 					console.debug("Starting udp listener.");
 					while (true) {
+						receiving_packet = new DatagramPacket(receive_buffer, receive_buffer.length);
 						socket.receive(receiving_packet);
-						System.out.println("Received!");
 						receive_buffer = receiving_packet.getData();
 						receive();
 					}
@@ -147,6 +147,7 @@ public class UDPChannel {
 			if (buffer==data.length) {
 				try {
 					send_packet = new DatagramPacket(generateFloatDatagram(data), BYTE_SIZE*buffer+OFFSET, server, uport);
+					System.out.println("Sending...");
 					socket.send(send_packet);
 				} catch (IOException e) {
 					console.warn("Stream broke down!");

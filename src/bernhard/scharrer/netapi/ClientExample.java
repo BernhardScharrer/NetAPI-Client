@@ -62,9 +62,9 @@ public class ClientExample {
 			e.printStackTrace();
 		}
 		
-//		for (int n=0;n<1000;n++) {
-//			client.send(new float[] {7.1f,12349.57f,-12349.2f});
-//		}
+		for (int n=0;n<3;n++) {
+			client.send(new float[] {7.1f,12349.57f,-12349.2f});
+		}
 		
 	}
 	
