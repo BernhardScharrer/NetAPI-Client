@@ -34,6 +34,9 @@ public class UDPChannel {
 	private DatagramPacket send_packet;
 
 	/**
+	 * 
+	 * opens a datagram listener and a datagram sender on specified port.
+	 * 
 	 * @param client generall callback
 	 * @param udp callback for receiving data
 	 * @param console for logging purposes
@@ -120,15 +123,13 @@ public class UDPChannel {
 	}
 	
 	/**
-	 * send int data server
-	 * 
-	 * @param data
+	 * @param data stores an int[] which should be send
 	 */
 	void send(int[] data) {
 		if (started) {
 			if (buffer==data.length) {
 				try {
-					send_packet = new DatagramPacket(generateIntPacket(data), BYTE_SIZE*buffer+OFFSET, server, uport);
+					send_packet = new DatagramPacket(generateIntDatagram(data), BYTE_SIZE*buffer+OFFSET, server, uport);
 					socket.send(send_packet);
 				} catch (IOException e) {
 					console.warn("Stream broke down!");
@@ -142,12 +143,14 @@ public class UDPChannel {
 		}
 	}
 	
+	/**
+	 * @param data stores a float[] which should be send
+	 */
 	void send(float[] data) {
 		if (started) {
 			if (buffer==data.length) {
 				try {
 					send_packet = new DatagramPacket(generateFloatDatagram(data), BYTE_SIZE*buffer+OFFSET, server, uport);
-					System.out.println("Sending...");
 					socket.send(send_packet);
 				} catch (IOException e) {
 					console.warn("Stream broke down!");
@@ -161,7 +164,13 @@ public class UDPChannel {
 		}
 	}
 	
-	private byte[] generateIntPacket(int[] data) {
+	/**
+	 * converts an int[] to a byte[]
+	 * 
+	 * @param data
+	 * @return buffer
+	 */
+	private byte[] generateIntDatagram(int[] data) {
 		byte[] datagram = new byte[(BYTE_SIZE*buffer)+OFFSET];
 		int n = 0;
 		datagram[0] = INTEGER_PACKET;
@@ -172,6 +181,12 @@ public class UDPChannel {
 		return datagram;
 	}
 	
+	/**
+	 * converts an float[] to a byte[]
+	 * 
+	 * @param data
+	 * @return buffer
+	 */
 	private byte[] generateFloatDatagram(float[] data) {
 		byte[] datagram = new byte[(BYTE_SIZE*buffer)+OFFSET];
 		int n = 0;
@@ -182,6 +197,13 @@ public class UDPChannel {
 		return datagram;
 	}
 	
+	/**
+	 * store a float into a 4 byte buffer
+	 * 
+	 * @param bytes
+	 * @param start
+	 * @return
+	 */
 	private void convertInt(byte[] buffer, int start, int value) {
 		buffer[start] = (byte) (value >>> 24);
 		buffer[start+1] = (byte) (value >>> 16);
@@ -189,6 +211,13 @@ public class UDPChannel {
 		buffer[start+3] = (byte) (value);
 	}
 
+	/**
+	 * convert a 4 byte buffer to a float
+	 * 
+	 * @param bytes
+	 * @param start
+	 * @return
+	 */
 	private int convertToInt(byte[] buffer, int start) {
 		return (buffer[start+3] < 0 ? buffer[start+3] + 256 : buffer[start+3])
 				+ ((buffer[start+2] < 0 ? buffer[start+2] + 256 : buffer[start+2]) << 8)
@@ -196,14 +225,31 @@ public class UDPChannel {
 				+ ((buffer[start] < 0 ? buffer[start] + 256 : buffer[start]) << 24);
 	}
 	
+	/**
+	 * store a float into a 4 byte buffer
+	 * 
+	 * @param bytes
+	 * @param start
+	 * @return
+	 */
 	private void convertFloat(byte[] buffer, int start, float value) {
 	    ByteBuffer.wrap(buffer, start, OFFSET).putFloat(value);
 	}
 
+	/**
+	 * convert a 4 byte buffer to a float
+	 * 
+	 * @param bytes
+	 * @param start
+	 * @return
+	 */
 	private float convertToFloat(byte[] bytes, int start) {
 	    return ByteBuffer.wrap(bytes,start,OFFSET).getFloat();
 	}
 	
+	/**
+	 * cleaning up datagram listener
+	 */
 	void cleanUp() {
 		
 		started = false;

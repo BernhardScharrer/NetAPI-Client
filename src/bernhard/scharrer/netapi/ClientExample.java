@@ -1,5 +1,7 @@
 package bernhard.scharrer.netapi;
 
+import java.util.Random;
+
 import bernhard.scharrer.netapi.client.Client;
 import bernhard.scharrer.netapi.client.Console;
 import bernhard.scharrer.netapi.client.ConsoleType;
@@ -14,7 +16,7 @@ public class ClientExample {
 	private static Client client;
 	
 	public static void main(String[] args) {
-		client = NetAPI.start("localhost", 7788
+		client = NetAPI.start("4ahel.at", 7788
 		/**
 		 * tcp modul
 		 */
@@ -62,8 +64,20 @@ public class ClientExample {
 			e.printStackTrace();
 		}
 		
-		for (int n=0;n<3;n++) {
-			client.send(new float[] {7.1f,12349.57f,-12349.2f});
+		Random r = new Random();
+		int n = 0;
+		
+		while (true) {
+			client.send(new float[] {r.nextFloat(),r.nextFloat(),r.nextFloat()});
+			if (n++==99) {
+				client.send("Now");
+				n=0;
+			}
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}
